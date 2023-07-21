@@ -1,0 +1,39 @@
+<h2>Bienvenido {{user.user_rol}}:{{user.user_name}}</h2>
+<button id="logout">Cerrar sesión</button>
+
+<h2>Lista de productos</h2>
+<div id="productsDiv">
+
+</div>
+
+
+<script type="module">
+    (async () => {
+
+        const productsDiv = document.getElementById('productsDiv')
+        const data = await fetch('/api/products')
+        const products = (await data.json()).payload
+        await products.forEach(async (product) => {
+            const producto = document.createElement('article')
+            producto.innerHTML = (`
+                        <h3 >Title:${product.title}</h3>
+                        <p >Description:${product.description}</p>
+                        <p >Code:${product.code}</p>
+                        <p >Price:${product.price}</p>
+                        <p >Status:${product.status}</p>
+                        <p >Stock:${product.stock}</p>
+                        <p >Category:${product.category}</p>
+                        <p >Thumbnails:${product.thumbnails}</p>
+                    `)
+            productsDiv.append(producto)
+        })
+
+        const logout = document.getElementById('logout')
+        logout.addEventListener("click", async () => {
+            await fetch('/api/user/deletesession')
+        })
+    })()
+
+
+
+</script>
